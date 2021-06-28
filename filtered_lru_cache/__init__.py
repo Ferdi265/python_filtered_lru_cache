@@ -5,7 +5,7 @@ class DontCache(Exception):
         super().__init__("don't cache this result")
         self.data = data
 
-def ignore_dontcache(fn):
+def unwrap_dontcache(fn):
     @functools.wraps(fn)
     def wrapped(*args, **kwargs):
         try:
@@ -18,7 +18,7 @@ def ignore_dontcache(fn):
 def filtered_lru_cache(filter, maxsize=128, typed=False):
     def filtered_lru_cache_decorator(fn):
         @functools.wraps(fn)
-        @ignore_dontcache
+        @unwrap_dontcache
         @functools.lru_cache(maxsize=maxsize, typed=typed)
         def wrapped(*args, **kwargs):
             result = fn(*args, **kwargs)
